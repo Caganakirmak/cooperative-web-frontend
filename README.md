@@ -20,6 +20,7 @@ Sunucu ayağa kaldırıldıktan sonra altyapının kurulması için `setup.sh` b
 ```bash
 chmod +x setup.sh
 ./setup.sh
+```
 
 ## 🌐 Canlı Yayın Linkleri (Live Deployments)
 
