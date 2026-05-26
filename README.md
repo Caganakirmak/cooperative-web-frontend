@@ -20,3 +20,10 @@ Sunucu ayağa kaldırıldıktan sonra altyapının kurulması için `setup.sh` b
 ```bash
 chmod +x setup.sh
 ./setup.sh
+
+## 🌐 Canlı Yayın Linkleri (Live Deployments)
+
+AWS EC2 üzerinde Nginx ile ayağa kaldırılan IaaS web sunucusuna aşağıdaki adreslerden ulaşabilirsiniz:
+
+* 🔗 **Doğrudan IP Erişimi:** [http://51.20.75.93](http://51.20.75.93)
+* 🔗 **AWS Public DNS Erişimi:** [http://ec2-51-20-75-93.eu-north-1.compute.amazonaws.com/](http://ec2-51-20-75-93.eu-north-1.compute.amazonaws.com/)
