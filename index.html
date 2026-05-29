@@ -1,18 +1,699 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Şanlıurfa Tarım Kooperatifi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şanlıurfa Tarım Kooperatifi - Farmer Member Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
     <style>
-        body { font-family: Arial; text-align: center; padding: 50px; background: #f0f7e6; }
-        h1 { color: #2d6a2d; }
-        .status { background: #2d6a2d; color: white; padding: 10px; border-radius: 8px; }
+        /* İkinci kodun estetik renk paleti ve CSS Değişkenleri tanımları */
+        :root {
+            --color-bg-main: #f0f7e6;           /* İkinci kodun yumuşak yeşil arka planı */
+            --color-primary: #2d6a2d;           /* İkinci kodun kurumsal kooperatif yeşili */
+            --color-primary-hover: #1e4a1e;
+            --color-card-bg: #ffffff;
+            --color-text-main: #2b3a2b;
+            --color-text-muted: #556b55;
+            --color-border: #d2e3c8;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--color-bg-main);
+            color: var(--color-text-main);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Ana Panel Konteyneri */
+        .wrapper {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--color-card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 8px 24px rgba(45, 106, 45, 0.08);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+        }
+
+        /* Header Tasarımı */
+        .header {
+            padding: 2.5rem 2rem 2rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fbf3 100%);
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius-lg);
+            background: #e1f0d3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 1px solid var(--color-border);
+        }
+
+        .header-text h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .header-text p {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: var(--color-primary);
+            color: white;
+            margin-top: 10px;
+            box-shadow: 0 2px 6px rgba(45, 106, 45, 0.2);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #26ff26;
+            box-shadow: 0 0 8px #26ff26;
+        }
+
+        /* Navigasyon Sekmeleri */
+        .nav {
+            display: flex;
+            gap: 8px;
+            padding: 0 2rem;
+            background: #fcfdfe;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-btn {
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .nav-btn:hover:not(.active) {
+            color: var(--color-primary);
+            background: #f4faf0;
+        }
+
+        /* İçerik Alanları */
+        .content {
+            padding: 2rem;
+            display: none;
+            background: #ffffff;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        /* Metrik Kartları Grid yapısı */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .metric {
+            background: #f9fbf7;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            padding: 1.25rem;
+            transition: transform 0.2s;
+        }
+
+        .metric:hover {
+            transform: translateY(-2px);
+        }
+
+        .metric-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+
+        /* Kart Yapısı */
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f5eb;
+            padding-bottom: 10px;
+        }
+
+        /* Altyapı Grid Listesi */
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .infra-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #fbfdfa;
+            border: 1px solid #eef4e8;
+            border-radius: var(--border-radius-md);
+        }
+
+        .infra-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .infra-icon.green { background: #eaf3de; color: var(--color-primary); }
+        .infra-icon.blue { background: #e6f1fb; color: #185FA5; }
+        .infra-icon.amber { background: #faeeda; color: #854F0B; }
+        .infra-icon.teal { background: #e1f5ee; color: #0F6E56; }
+
+        .infra-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .infra-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-main);
+        }
+
+        .infra-val {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: #eaf3de;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        /* Tablo Yapısı */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            border-bottom: 2px solid var(--color-border);
+            text-transform: uppercase;
+        }
+
+        tbody td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f5eb;
+            color: var(--color-text-main);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: #f7fbf4;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .av-green { background: #eaf3de; color: var(--color-primary); }
+        .av-blue { background: #e6f1fb; color: #185FA5; }
+        .av-amber { background: #faeeda; color: #854F0B; }
+        .av-coral { background: #faece7; color: #993C1D; }
+        .av-teal { background: #e1f5ee; color: #0F6E56; }
+
+        .td-flex {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .tag-green { background: #eaf3de; color: var(--color-primary); }
+        .tag-amber { background: #faeeda; color: #854F0B; }
+        .tag-blue { background: #e6f1fb; color: #185FA5; }
+
+        /* Duyuru Listesi */
+        .ann-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f5eb;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .ann-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .ann-date {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            min-width: 90px;
+            background: #f4faf0;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e2ebd9;
+        }
+
+        .ann-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
+
+        .ann-content p {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+        }
+
+        /* Form Elemanları Tasarımı */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            font-size: 14px;
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            background: #fbfdfa;
+            color: var(--color-text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--color-primary);
+            background: #ffffff;
+        }
+
+        .submit-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(45, 106, 45, 0.15);
+        }
+
+        .submit-btn:hover {
+            background: var(--color-primary-hover);
+        }
+
+        /* Altyapı Mimari Diyagram Alanı */
+        .arch-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 10px 0;
+        }
+
+        .arch-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .arch-box {
+            padding: 10px 16px;
+            border-radius: var(--border-radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid;
+        }
+
+        .arch-green { background: #eaf3de; color: var(--color-primary); border-color: #c0dd97; }
+        .arch-blue { background: #e6f1fb; color: #185FA5; border-color: #b5d4f4; }
+        .arch-amber { background: #faeeda; color: #854F0B; border-color: #fac775; }
+        .arch-gray { background: #f5f5f5; color: #666; border-color: #ddd; }
+        
+        .arrow {
+            color: var(--color-text-muted);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .arch-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-text-muted);
+            min-width: 70px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
-    <h1>🌾Şanlıurfa Tarım Kooperatifi</h1>
-    <p>Farmer Member Portal - Cloud Infrastructure Phase 2</p>
-    <div class="status">✅IaaS Web Server - Running on AWS EC2</div>
-    <p>CMPE433 - Group 3</p>
+
+<div class="wrapper">
+    <div class="header">
+        <div class="logo">🌾</div>
+        <div class="header-text">
+            <h1>Şanlıurfa Tarım Kooperatifi</h1>
+            <p>Farmer Member Portal — Cloud Infrastructure Phase 2 · CMPE433 Group 3</p>
+            <span class="badge"><span class="dot"></span> IaaS Web Server running on AWS EC2</span>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button class="nav-btn active" onclick="switchTab(event, 'dashboard')">Dashboard</button>
+        <button class="nav-btn" onclick="switchTab(event, 'farmers')">Üyeler</button>
+        <button class="nav-btn" onclick="switchTab(event, 'harvest')">Hasat Kayıt</button>
+        <button class="nav-btn" onclick="switchTab(event, 'announcements')">Duyurular</button>
+        <button class="nav-btn" onclick="switchTab(event, 'architecture')">Mimari</button>
+    </div>
+
+    <div id="tab-dashboard" class="content active">
+        <div class="grid-4">
+            <div class="metric"><div class="metric-label">Toplam Üye</div><div class="metric-value">128</div><div class="metric-sub">+4 bu ay</div></div>
+            <div class="metric"><div class="metric-label">Aktif Saha (dönüm)</div><div class="metric-value">3.240</div><div class="metric-sub">Şanlıurfa geneli</div></div>
+            <div class="metric"><div class="metric-label">Bu Sezon Hasat</div><div class="metric-value">847 t</div><div class="metric-sub">buğday + pamuk</div></div>
+            <div class="metric"><div class="metric-label">S3 Depolama</div><div class="metric-value">12.4 GB</div><div class="metric-sub">Farmer data bucket</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="ti ti-server"></i> Altyapı Durumu</div>
+            <div class="infra-grid">
+                <div class="infra-item">
+                    <div class="infra-icon green"><i class="ti ti-cpu"></i></div>
+                    <div class="infra-info">
+                        <div class="infra-name">EC2 Instance</div>
+                        <div class="infra-val">t3.micro · eu-north-1a</div>
+                    </div>
+                    <span class="status-pill">Running</span>
+                </div>
+                <div class="infra-item">
+                    <div class="infra-icon blue"><i class="ti ti-world"></i></div>
+                    <div class="infra-info">
+                        <div class="infra-name">Apache HTTP Server</div>
+                        <div class="infra-val">Port 80/443 açık</div>
+                    </div>
+                    <span class="status-pill">Active</span>
+                </div>
+                <div class="infra-item">
+                    <div class="infra-icon teal"><i class="ti ti-database"></i></div>
+                    <div class="infra-info">
+                        <div class="infra-name">S3 Bucket</div>
+                        <div class="infra-val">Farmer data storage</div>
+                    </div>
+                    <span class="status-pill">Active</span>
+                </div>
+                <div class="infra-item">
+                    <div class="infra-icon amber"><i class="ti ti-network"></i></div>
+                    <div class="infra-info">
+                        <div class="infra-name">VPC / Subnet</div>
+                        <div class="infra-val">vpc-0fe56db9e42e2a486</div>
+                    </div>
+                    <span class="status-pill">Healthy</span>
+                </div>
+                <div class="infra-item">
+                    <div class="infra-icon green"><i class="ti ti-lock"></i></div>
+                    <div class="infra-info">
+                        <div class="infra-name">Security Group</div>
+                        <div class="infra-val">SSH · HTTP · HTTPS</div>
+                    </div>
+                    <span class="status-pill">Active</span>
+                </div>
+                <div class="infra-item">
+                    <div class="infra-icon blue"><i class="ti ti-device-floppy"></i></div>
+                    <div class="infra-info">
+                        <div class="infra-name">EBS Volume</div>
+                        <div class="infra-val">gp3 SSD</div>
+                    </div>
+                    <span class="status-pill">Attached</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-farmers" class="content">
+        <div class="card">
+            <div class="card-title"><i class="ti ti-users"></i> Üye Listesi</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>İsim</th>
+                        <th>İlçe</th>
+                        <th>Ürün</th>
+                        <th>Saha (dönüm)</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><div class="td-flex"><div class="avatar av-green">AY</div>Ahmet Yılmaz</div></td><td>Merkez</td><td>Buğday</td><td>45</td><td><span class="tag tag-green">Aktif</span></td></tr>
+                    <tr><td><div class="td-flex"><div class="avatar av-blue">FK</div>Fatma Kaya</div></td><td>Viranşehir</td><td>Pamuk</td><td>120</td><td><span class="tag tag-green">Aktif</span></td></tr>
+                    <tr><td><div class="td-flex"><div class="avatar av-amber">MÖ</div>Mehmet Öztürk</div></td><td>Halfeti</td><td>Fıstık</td><td>30</td><td><span class="tag tag-amber">Pasif</span></td></tr>
+                    <tr><td><div class="td-flex"><div class="avatar av-coral">ZD</div>Zeynep Doğan</div></td><td>Siverek</td><td>Mercimek</td><td>80</td><td><span class="tag tag-green">Aktif</span></td></tr>
+                    <tr><td><div class="td-flex"><div class="avatar av-teal">HŞ</div>Hüseyin Şahin</div></td><td>Bozova</td><td>Buğday</td><td>200</td><td><span class="tag tag-green">Aktif</span></td></tr>
+                    <tr><td><div class="td-flex"><div class="avatar av-blue">EA</div>Emine Arslan</div></td><td>Suruç</td><td>Pamuk</td><td>95</td><td><span class="tag tag-blue">Yeni</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-harvest" class="content">
+        <div class="card">
+            <div class="card-title"><i class="ti ti-plant"></i> Hasat Kaydı Ekle</div>
+            <div class="form-grid">
+                <div><label>Çiftçi Adı</label><input type="text" placeholder="Ad soyad..."></div>
+                <div><label>Tarih</label><input type="date"></div>
+                <div>
+                    <label>Ürün Türü</label>
+                    <select>
+                        <option>Buğday</option>
+                        <option>Pamuk</option>
+                        <option>Mercimek</option>
+                        <option>Fıstık</option>
+                        <option>Domates</option>
+                    </select>
+                </div>
+                <div><label>Miktar (ton)</label><input type="number" placeholder="0.0"></div>
+                <div><label>Saha (dönüm)</label><input type="number" placeholder="0"></div>
+                <div>
+                    <label>İlçe</label>
+                    <select>
+                        <option>Merkez</option>
+                        <option>Viranşehir</option>
+                        <option>Halfeti</option>
+                        <option>Siverek</option>
+                        <option>Bozova</option>
+                        <option>Suruç</option>
+                    </select>
+                </div>
+            </div>
+            <button class="submit-btn" onclick="alert('Backend API entegrasyonu simüle edildi! (POST /api/v1/harvest)')">Kaydet ↗</button>
+        </div>
+    </div>
+
+    <div id="tab-announcements" class="content">
+        <div class="card">
+            <div class="card-title"><i class="ti ti-speakerphone"></i> Kooperatif Duyuruları</div>
+            <div class="ann-item">
+                <div class="ann-date">28 May 2026</div>
+                <div class="ann-content"><h4>Cloud Infrastructure Phase 2 tamamlandı</h4><p>AWS EC2 üzerinde Apache web sunucusu başarıyla devreye alındı. Terraform ile tüm altyapı kodlandı.</p></div>
+            </div>
+            <div class="ann-item">
+                <div class="ann-date">15 May 2026</div>
+                <div class="ann-content"><h4>S3 Bucket aktive edildi</h4><p>Çiftçi veri depolama birimi eu-north-1 bölgesinde hizmete girdi. Belgeler sisteme yüklenebilir.</p></div>
+            </div>
+            <div class="ann-item">
+                <div class="ann-date">01 May 2026</div>
+                <div class="ann-content"><h4>Buğday hasat sezonu başladı</h4><p>2026 sezonu için hasat kayıtları sisteme girilmeye başlandı. Üyelerimiz portal üzerinden kayıt yapabilir.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-architecture" class="content">
+        <div class="card">
+            <div class="card-title"><i class="ti ti-topology-star"></i> AWS Altyapı Mimarisi</div>
+            <div class="arch-section">
+                <div class="arch-row">
+                    <span class="arch-label">İnternet</span>
+                    <div class="arch-box arch-gray"><i class="ti ti-user"></i> Kullanıcı</div>
+                    <span class="arrow">→</span>
+                    <div class="arch-box arch-blue"><i class="ti ti-globe"></i> Internet Gateway</div>
+                    <span class="arrow">→</span>
+                    <div class="arch-box arch-blue"><i class="ti ti-route"></i> Public Subnet</div>
+                </div>
+                <div class="arch-row">
+                    <span style="min-width:70px; display:inline-block"></span>
+                    <span class="arrow" style="transform:rotate(90deg); display:inline-block; margin-left:35px; padding: 5px 0;">↓</span>
+                </div>
+                <div class="arch-row">
+                    <span class="arch-label">VPC</span>
+                    <div class="arch-box arch-green"><i class="ti ti-lock"></i> Security Group</div>
+                    <span class="arrow">→</span>
+                    <div class="arch-box arch-green"><i class="ti ti-cpu"></i> EC2 t3.micro</div>
+                    <span class="arrow">→</span>
+                    <div class="arch-box arch-amber"><i class="ti ti-device-floppy"></i> EBS gp3</div>
+                </div>
+                <div class="arch-row">
+                    <span style="min-width:70px; display:inline-block"></span>
+                    <span class="arrow" style="transform:rotate(90deg); display:inline-block; margin-left:35px; padding: 5px 0;">↓</span>
+                </div>
+                <div class="arch-row">
+                    <span class="arch-label">Depolama</span>
+                    <div class="arch-box arch-green" style="background:#e1f5ee; color:#0F6E56; border-color:#9fe1cb"><i class="ti ti-database"></i> S3 Bucket (farmer-data)</div>
+                    <span style="font-size:12px; color:var(--color-text-muted); font-weight:500;">— Private Subnet üzerinden erişim</span>
+                </div>
+                
+                <div style="margin-top:20px; padding-top:15px; border-top:1px solid var(--color-border)">
+                    <p style="font-size:13px; color:var(--color-text-muted); font-weight: 500;">
+                        <i class="ti ti-code" style="font-size:15px; vertical-align:-2px; margin-right:4px"></i>
+                        Tüm altyapı <strong>Terraform</strong> ile kodlanmış · Bölge: <strong>eu-north-1 (Stockholm)</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchTab(event, tabName) {
+    // Tüm içerikleri gizle
+    document.querySelectorAll('.content').forEach(content => {
+        content.classList.remove('active');
+    });
+    // Tüm buton aktifliklerini kaldır
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // İlgili sekmeyi aç ve butonu aktif yap
+    document.getElementById('tab-' + tabName).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+</script>
+
 </body>
 </html>
